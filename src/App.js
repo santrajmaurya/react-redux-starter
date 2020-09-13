@@ -17,22 +17,19 @@ const  App = (props) =>  {
   }, [])
 
   const deleteUserById = (e) => {
-    debugger
     const selectedId = e.target.id;
     props.deleteUser(selectedId);
-    console.log('selectedId', selectedId);
-
   }
 
   console.log('props', props);
   return (
     <>
-    <div className="App">
+    {/* <div className="App">
       <h1>{props.counterReducer.count}</h1>
       <button className="btn btn-primary" onClick={props.incrementCount}>Increment</button>
       <button  className="btn btn-danger" onClick={props.decrementCount}>Decrement</button>
-    </div>
-    
+    </div> */}
+    <h1 className="App">List of users</h1>
     <br />
     <table className="table table-dark">
     <thead>
@@ -41,7 +38,8 @@ const  App = (props) =>  {
         <th scope="col">Name</th>
         <th scope="col">UserName</th>
         <th scope="col">Email</th>
-        <th scope="col">Action</th>
+        <th scope="col">Delete</th>
+        <th scope="col">Edit</th>
       </tr>
     </thead>
     {props.userReducer.users.map(user => {
@@ -53,6 +51,7 @@ const  App = (props) =>  {
         <td>{user.username}</td>
         <td>{user.email}</td>
         <td><button id={user.id} className="btn btn-danger" onClick={deleteUserById}>Delete</button></td>
+        <td><button id={user.id} className="btn btn-info">Edit</button></td>
       </tr>
     </tbody>
       )
@@ -75,8 +74,6 @@ const mapDispatchToProps = dispatch => {
       decrementCount: () => dispatch(decrementCount()),
       fetchData: () => dispatch(fetchData()),
       deleteUser: (id) => dispatch(deleteUser(id)),
-      
-      
   }
 }
 

@@ -1,26 +1,83 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import { connect } from "react-redux";
+
+import { incrementCount, decrementCount} from './actions/CounterAction';
+import { fetchData, deleteUser } from './actions/ShowDataAction';
+
+
 import './App.css';
 
-function App() {
+const  App = (props) =>  {
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    props.fetchData();
+
+  }, [])
+
+  const deleteUserById = (e) => {
+    debugger
+    const selectedId = e.target.id;
+    props.deleteUser(selectedId);
+    console.log('selectedId', selectedId);
+
+  }
+
+  console.log('props', props);
   return (
+    <>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>{props.counterReducer.count}</h1>
+      <button className="btn btn-primary" onClick={props.incrementCount}>Increment</button>
+      <button  className="btn btn-danger" onClick={props.decrementCount}>Decrement</button>
     </div>
+    
+    <br />
+    <table className="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">UserName</th>
+        <th scope="col">Email</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    {props.userReducer.users.map(user => {
+      return (
+      <tbody key={user.id}>
+      <tr >
+        <td>{user.id}</td>
+        <td>{user.name}</td>
+        <td>{user.username}</td>
+        <td>{user.email}</td>
+        <td><button id={user.id} className="btn btn-danger" onClick={deleteUserById}>Delete</button></td>
+      </tr>
+    </tbody>
+      )
+    })}
+  </table>
+  </>
   );
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    counterReducer: state.counterReducer,
+    userReducer : state.showDataReducer
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+      incrementCount: () => dispatch(incrementCount()),
+      decrementCount: () => dispatch(decrementCount()),
+      fetchData: () => dispatch(fetchData()),
+      deleteUser: (id) => dispatch(deleteUser(id)),
+      
+      
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
